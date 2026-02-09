@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Access | Secure Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d4ff; /* Tech Blue */
+            --bg: #0a0a0c;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            display: none; /* Hidden by default */
+        }
+
+        .active { display: block; animation: fadeIn 0.8s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-family: 'Syncopate', sans-serif; letter-spacing: 5px; margin-bottom: 20px; font-size: 1.8rem; }
+        p { line-height: 1.6; font-weight: 300; color: #ccc; margin-bottom: 30px; }
+
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #00d4ff, #0055ff);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.8rem;
+        }
+
+        .btn:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(0, 212, 255, 0.5); }
+
+        .btn-secondary { background: transparent; border: 1px solid var(--border); margin-top: 10px; }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .warning-text { color: #ff4d4d; font-weight: bold; }
+        
+        #noBtn { position: absolute; }
+    </style>
+</head>
+<body>
+
+    <div id="page1" class="container active">
+        <h1>WELCOME</h1>
+        <p>A secure portal for encrypted communication.</p>
+        <button class="btn" onclick="nextPage(2)">Continue</button>
+    </div>
+
+    <div id="page2" class="container">
+        <h1 class="warning-text">⚠️ ALERT</h1>
+        <p>Suspicious activity detected!<br>It seems someone accessed this page. Are you authorized? Only proceed if you dare...</p>
+        <button class="btn" onclick="nextPage('auth')">Yes, I’m authorized</button>
+        <br>
+        <button id="noBtn" class="btn btn-secondary">No, exit now</button>
+    </div>
+
+    <div id="page3" class="container">
+        <h1 style="color: #ff4d4d;">SYSTEM ERROR 404</h1>
+        <p>Your request was terminated due to repeated exit attempts. Security protocols engaged.</p>
+        <button class="btn" onclick="resetToHome()">Try Again</button>
+    </div>
+
+    <div id="page4" class="container">
+        <h1 class="warning-text">⚠ FINAL VERIFICATION</h1>
+        <p style="font-size: 0.8rem; text-align: left;">
+            Exiting isn’t that easy. To confirm a genuine exit request, you must correctly answer 10 security questions. 
+            Fail even one — and exit access will be denied. <br><br>
+            <b>Warning:</b> Attempting to escape may trigger an automatic system response.
+        </p>
+        <button class="btn" onclick="nextPage(6)">Let's answer the questions</button>
+    </div>
+
+    <div id="page5" class="container">
+        <h1>IDENTIFY</h1>
+        <p>Authorization required. Identify the person who directed you here.</p>
+        <input type="text" id="partnerName" placeholder="Enter Name...">
+        <button class="btn" onclick="checkName()">Verify Identity</button>
+        <p id="errorMsg" style="color: red; margin-top: 10px; display: none;">Something went wrong. Please try again.</p>
+    </div>
+
+    <div id="page6" class="container">
+        <h1>QUESTION 1</h1>
+        <p>Do you really think you can just leave after coming this far?</p>
+        <button class="btn" onclick="alert('System Overload... Redirection starting.')">Processing...</button>
+    </div>
+
+    <script>
+        let noClickCount = 0;
+        let repeatCycle = 0;
+
+        function nextPage(pageNumber) {
+            document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+            
+            if(pageNumber === 'auth') {
+                document.getElementById('page5').classList.add('active');
+            } else {
+                document.getElementById('page' + pageNumber).classList.add('active');
+            }
+        }
+
+        // Logic for "No, exit now" button
+        const noBtn = document.getElementById('noBtn');
+        noBtn.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        });
+
+        noBtn.addEventListener('click', () => {
+            noClickCount++;
+            if(noClickCount >= 10) {
+                nextPage(3);
+            }
+        });
+
+        function resetToHome() {
+            noClickCount = 0;
+            repeatCycle++;
+            if(repeatCycle >= 3) {
+                nextPage(4);
+            } else {
+                nextPage(1);
+            }
+        }
+
+        function checkName() {
+            const name = document.getElementById('partnerName').value.toLowerCase();
+            const btn = event.target;
+            
+            if(name === "hamza") {
+                btn.innerText = "LOADING...";
+                setTimeout(() => {
+                    alert("AUTHORIZATION SUCCESSFUL. WELCOME MA'AM.");
+                    // Yahan se aap apne Valentine content ka page 7 add kar sakte hain
+                    document.body.style.background = "radial-gradient(circle at center, #ff4d6d 0%, #590d22 100%)";
+                    document.getElementById('page5').innerHTML = "<h1>Happy Valentine's Week! ❤️</h1><p>You cracked the code to my heart.</p>";
+                }, 2000);
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
