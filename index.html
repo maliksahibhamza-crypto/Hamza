@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00d4ff; /* Tech Blue */
+            --primary: #00d4ff;
             --bg: #0a0a0c;
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
@@ -20,6 +20,7 @@
             color: white;
             font-family: 'Montserrat', sans-serif;
             height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,7 +30,7 @@
 
         .container {
             width: 90%;
-            max-width: 500px;
+            max-width: 450px;
             padding: 40px;
             text-align: center;
             background: var(--glass);
@@ -37,18 +38,19 @@
             border: 1px solid var(--border);
             border-radius: 20px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            display: none; /* Hidden by default */
+            display: none; 
+            z-index: 10;
         }
 
         .active { display: block; animation: fadeIn 0.8s ease; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-family: 'Syncopate', sans-serif; letter-spacing: 5px; margin-bottom: 20px; font-size: 1.8rem; }
-        p { line-height: 1.6; font-weight: 300; color: #ccc; margin-bottom: 30px; }
+        h1 { font-family: 'Syncopate', sans-serif; letter-spacing: 5px; margin-bottom: 20px; font-size: 1.4rem; color: var(--primary); }
+        p { line-height: 1.6; font-weight: 300; color: #ccc; margin-bottom: 30px; font-size: 0.9rem; }
 
         .btn {
-            padding: 15px 35px;
+            padding: 15px 30px;
             border: none;
             border-radius: 50px;
             background: linear-gradient(45deg, #00d4ff, #0055ff);
@@ -57,104 +59,125 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
             font-family: 'Syncopate', sans-serif;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            display: inline-block;
+            text-decoration: none;
         }
 
-        .btn:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(0, 212, 255, 0.5); }
+        /* Moving Button Styling */
+        #noBtn {
+            position: fixed; /* Pure screen par kahin bhi ja sake */
+            background: transparent;
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+            z-index: 999;
+            transition: 0.1s ease-out; /* Tezi se move hoga */
+        }
 
-        .btn-secondary { background: transparent; border: 1px solid var(--border); margin-top: 10px; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); margin-top: 15px; }
 
         input {
             width: 100%;
             padding: 15px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.5);
             border: 1px solid var(--border);
             border-radius: 10px;
             color: white;
             text-align: center;
             margin-bottom: 20px;
+            outline: none;
         }
 
-        .warning-text { color: #ff4d4d; font-weight: bold; }
-        
-        #noBtn { position: absolute; }
+        .warning-text { color: #ff4d4d; }
     </style>
 </head>
 <body>
 
     <div id="page1" class="container active">
         <h1>WELCOME</h1>
-        <p>A secure portal for encrypted communication.</p>
+        <p>A secure portal for encrypted communication. Access restricted to authorized personnel only.</p>
         <button class="btn" onclick="nextPage(2)">Continue</button>
     </div>
 
     <div id="page2" class="container">
         <h1 class="warning-text">⚠️ ALERT</h1>
-        <p>Suspicious activity detected!<br>It seems someone accessed this page. Are you authorized? Only proceed if you dare...</p>
-        <button class="btn" onclick="nextPage('auth')">Yes, I’m authorized</button>
+        <p>Suspicious activity detected!<br>It seems someone accessed this page. Are you authorized? <br><br><b>Only proceed if you dare…</b></p>
+        <button class="btn" onclick="nextPage(5)">Yes, I’m authorized</button>
         <br>
         <button id="noBtn" class="btn btn-secondary">No, exit now</button>
     </div>
 
     <div id="page3" class="container">
-        <h1 style="color: #ff4d4d;">SYSTEM ERROR 404</h1>
-        <p>Your request was terminated due to repeated exit attempts. Security protocols engaged.</p>
+        <h1 class="warning-text">SYSTEM ERROR</h1>
+        <p>Exit request denied. The system has detected an infinite loop attempt. Please restart the handshake.</p>
         <button class="btn" onclick="resetToHome()">Try Again</button>
     </div>
 
     <div id="page4" class="container">
-        <h1 class="warning-text">⚠ FINAL VERIFICATION</h1>
-        <p style="font-size: 0.8rem; text-align: left;">
-            Exiting isn’t that easy. To confirm a genuine exit request, you must correctly answer 10 security questions. 
-            Fail even one — and exit access will be denied. <br><br>
-            <b>Warning:</b> Attempting to escape may trigger an automatic system response.
+        <h1 class="warning-text">⚠ TERMINAL LOCK</h1>
+        <p style="text-align: left; font-size: 0.8rem;">
+            So… you really want to leave? Exiting isn’t that easy. <br><br>
+            To confirm a genuine exit request, you must correctly answer 10 security questions. Fail even one — and access will be denied.<br><br>
+            <b>You’re already deeper than you think.</b>
         </p>
-        <button class="btn" onclick="nextPage(6)">Let's answer the questions</button>
+        <button class="btn" onclick="nextPage(6)">Let's answer</button>
     </div>
 
     <div id="page5" class="container">
         <h1>IDENTIFY</h1>
-        <p>Authorization required. Identify the person who directed you here.</p>
+        <p>Authorization required. <br>Identify the person who directed you here.</p>
         <input type="text" id="partnerName" placeholder="Enter Name...">
         <button class="btn" onclick="checkName()">Verify Identity</button>
-        <p id="errorMsg" style="color: red; margin-top: 10px; display: none;">Something went wrong. Please try again.</p>
+        <p id="errorMsg" style="color: #ff4d4d; margin-top: 10px; display: none; font-size: 0.8rem;">Access Denied. Identity mismatch.</p>
     </div>
 
     <div id="page6" class="container">
-        <h1>QUESTION 1</h1>
-        <p>Do you really think you can just leave after coming this far?</p>
-        <button class="btn" onclick="alert('System Overload... Redirection starting.')">Processing...</button>
-    </div>
+        <h1>PROCESS...</h1>
+        <p id="loadingText">Decrypting exit protocols...</p>
+        </div>
 
     <script>
         let noClickCount = 0;
         let repeatCycle = 0;
 
-        function nextPage(pageNumber) {
+        function nextPage(num) {
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+            document.getElementById('page' + num).classList.add('active');
             
-            if(pageNumber === 'auth') {
-                document.getElementById('page5').classList.add('active');
+            // "No" button ko sirf page 2 par dikhana hai
+            if(num === 2) {
+                document.getElementById('noBtn').style.display = 'inline-block';
+                document.getElementById('noBtn').style.position = 'static'; // Reset position initially
             } else {
-                document.getElementById('page' + pageNumber).classList.add('active');
+                document.getElementById('noBtn').style.display = 'none';
             }
         }
 
-        // Logic for "No, exit now" button
         const noBtn = document.getElementById('noBtn');
-        noBtn.addEventListener('mouseover', () => {
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 50);
+
+        // Mouseover/Touch se button bhagega
+        const moveButton = () => {
+            noBtn.style.position = 'fixed';
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
+        };
+
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Mobile touch issue solve
+            moveButton();
         });
 
+        // Agar wo phir bhi click kar le
         noBtn.addEventListener('click', () => {
             noClickCount++;
             if(noClickCount >= 10) {
                 nextPage(3);
+            } else {
+                moveButton();
             }
         });
 
@@ -169,16 +192,15 @@
         }
 
         function checkName() {
-            const name = document.getElementById('partnerName').value.toLowerCase();
-            const btn = event.target;
-            
+            const name = document.getElementById('partnerName').value.trim().toLowerCase();
             if(name === "hamza") {
-                btn.innerText = "LOADING...";
+                nextPage(6);
                 setTimeout(() => {
-                    alert("AUTHORIZATION SUCCESSFUL. WELCOME MA'AM.");
-                    // Yahan se aap apne Valentine content ka page 7 add kar sakte hain
+                    document.getElementById('loadingText').innerText = "Security Override... Heart Accessed ❤️";
                     document.body.style.background = "radial-gradient(circle at center, #ff4d6d 0%, #590d22 100%)";
-                    document.getElementById('page5').innerHTML = "<h1>Happy Valentine's Week! ❤️</h1><p>You cracked the code to my heart.</p>";
+                    setTimeout(() => {
+                        document.getElementById('page6').innerHTML = "<h1>SURPRISE! ❤️</h1><p>You thought it was a virus? No, it's just my heart trying to reach you. Happy Valentine's!</p>";
+                    }, 2000);
                 }, 2000);
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
