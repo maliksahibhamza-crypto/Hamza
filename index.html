@@ -11,6 +11,7 @@
             --bg: #0a0a0c;
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
+            --danger: #ff4d4d;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,7 +21,6 @@
             color: white;
             font-family: 'Montserrat', sans-serif;
             height: 100vh;
-            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,108 +34,128 @@
             padding: 40px;
             text-align: center;
             background: var(--glass);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border-radius: 24px;
             display: none; 
-            z-index: 10;
         }
 
-        .active { display: block; animation: fadeIn 0.8s ease; }
+        .active { display: block; animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        h1 { font-family: 'Syncopate', sans-serif; letter-spacing: 5px; margin-bottom: 20px; font-size: 1.4rem; color: var(--primary); }
-        p { line-height: 1.6; font-weight: 300; color: #ccc; margin-bottom: 30px; font-size: 0.9rem; }
+        h1 { font-family: 'Syncopate', sans-serif; letter-spacing: 5px; margin-bottom: 20px; font-size: 1.3rem; color: var(--primary); }
+        p { line-height: 1.6; font-weight: 300; color: #b0b0b0; margin-bottom: 30px; font-size: 0.9rem; }
+
+        .btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
 
         .btn {
-            padding: 15px 30px;
+            width: 100%;
+            max-width: 280px;
+            padding: 16px;
             border: none;
-            border-radius: 50px;
+            border-radius: 12px;
             background: linear-gradient(45deg, #00d4ff, #0055ff);
             color: white;
             font-weight: 700;
             text-transform: uppercase;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.3s all ease;
             font-family: 'Syncopate', sans-serif;
-            font-size: 0.7rem;
-            display: inline-block;
-            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 15px rgba(0, 212, 255, 0.2);
         }
 
-        /* Moving Button Styling */
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 20px rgba(0, 212, 255, 0.4); }
+
+        /* Floating No Button */
         #noBtn {
-            position: fixed; /* Pure screen par kahin bhi ja sake */
             background: transparent;
-            border: 1px solid #ff4d4d;
-            color: #ff4d4d;
-            z-index: 999;
-            transition: 0.1s ease-out; /* Tezi se move hoga */
+            border: 1px solid var(--border);
+            color: #888;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
         }
 
-        .btn-secondary { background: transparent; border: 1px solid var(--border); margin-top: 15px; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        #noBtn:active { transform: scale(0.9); }
 
         input {
             width: 100%;
-            padding: 15px;
-            background: rgba(0,0,0,0.5);
+            padding: 18px;
+            background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
             text-align: center;
             margin-bottom: 20px;
-            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.3s;
         }
 
-        .warning-text { color: #ff4d4d; }
+        input:focus { border-color: var(--primary); outline: none; background: rgba(255,255,255,0.07); }
+
+        .warning-text { color: var(--danger); text-shadow: 0 0 10px rgba(255, 77, 77, 0.3); }
     </style>
 </head>
 <body>
 
     <div id="page1" class="container active">
         <h1>WELCOME</h1>
-        <p>A secure portal for encrypted communication. Access restricted to authorized personnel only.</p>
-        <button class="btn" onclick="nextPage(2)">Continue</button>
+        <p>This is a secure, end-to-end encrypted node. <br>Unauthorized access is strictly prohibited.</p>
+        <button class="btn" onclick="nextPage(2)">Continue to Secure Line</button>
     </div>
 
     <div id="page2" class="container">
-        <h1 class="warning-text">⚠️ ALERT</h1>
-        <p>Suspicious activity detected!<br>It seems someone accessed this page. Are you authorized? <br><br><b>Only proceed if you dare…</b></p>
-        <button class="btn" onclick="nextPage(5)">Yes, I’m authorized</button>
-        <br>
-        <button id="noBtn" class="btn btn-secondary">No, exit now</button>
+        <h1 class="warning-text">⚠️ SECURITY ALERT</h1>
+        <p>Suspicious activity detected! <br>The system has flagged your entry. Are you authorized? <br><br><b>Only proceed if you dare...</b></p>
+        <div class="btn-wrapper">
+            <button class="btn" onclick="nextPage(5)">Yes, I’m authorized</button>
+            <button id="noBtn" class="btn" onclick="handleNoClick()">No, exit now</button>
+        </div>
     </div>
 
     <div id="page3" class="container">
-        <h1 class="warning-text">SYSTEM ERROR</h1>
-        <p>Exit request denied. The system has detected an infinite loop attempt. Please restart the handshake.</p>
-        <button class="btn" onclick="resetToHome()">Try Again</button>
+        <h1 class="warning-text">CRITICAL ERROR</h1>
+        <p>Exit sequence failed. The system cannot verify your logout request. Handshake protocol reset initiated.</p>
+        <button class="btn" onclick="resetToHome()">Re-initialize System</button>
     </div>
 
     <div id="page4" class="container">
-        <h1 class="warning-text">⚠ TERMINAL LOCK</h1>
-        <p style="text-align: left; font-size: 0.8rem;">
-            So… you really want to leave? Exiting isn’t that easy. <br><br>
-            To confirm a genuine exit request, you must correctly answer 10 security questions. Fail even one — and access will be denied.<br><br>
-            <b>You’re already deeper than you think.</b>
+        <h1 class="warning-text">⚠ FINAL EXIT VERIFICATION</h1>
+        <p style="text-align: left; font-size: 0.85rem;">
+            So… you really want to leave? Exiting isn’t that easy.<br><br>
+            To confirm a genuine exit request, you must answer 10 security questions correctly. Fail one—and exit access is denied.<br><br>
+            <b>Warning:</b> You’re already deeper than you think.
         </p>
-        <button class="btn" onclick="nextPage(6)">Let's answer</button>
+        <button class="btn" onclick="nextPage(6)">Let's answer the questions</button>
     </div>
 
     <div id="page5" class="container">
-        <h1>IDENTIFY</h1>
-        <p>Authorization required. <br>Identify the person who directed you here.</p>
-        <input type="text" id="partnerName" placeholder="Enter Name...">
+        <h1>AUTHENTICATE</h1>
+        <p>Identify the person who granted you access to this terminal.</p>
+        <input type="text" id="partnerName" placeholder="Enter full name...">
         <button class="btn" onclick="checkName()">Verify Identity</button>
-        <p id="errorMsg" style="color: #ff4d4d; margin-top: 10px; display: none; font-size: 0.8rem;">Access Denied. Identity mismatch.</p>
+        <p id="errorMsg" style="color: var(--danger); margin-top: 15px; display: none; font-size: 0.8rem;">Access Denied. Identity mismatch.</p>
     </div>
 
     <div id="page6" class="container">
-        <h1>PROCESS...</h1>
-        <p id="loadingText">Decrypting exit protocols...</p>
-        </div>
+        <h1>QUESTION 01</h1>
+        <p>Before leaving... did you really think this was a normal website?</p>
+        <button class="btn" onclick="revealValentine()">Yes / No</button>
+    </div>
 
     <script>
         let noClickCount = 0;
@@ -144,42 +164,20 @@
         function nextPage(num) {
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
             document.getElementById('page' + num).classList.add('active');
-            
-            // "No" button ko sirf page 2 par dikhana hai
-            if(num === 2) {
-                document.getElementById('noBtn').style.display = 'inline-block';
-                document.getElementById('noBtn').style.position = 'static'; // Reset position initially
-            } else {
-                document.getElementById('noBtn').style.display = 'none';
-            }
         }
 
-        const noBtn = document.getElementById('noBtn');
-
-        // Mouseover/Touch se button bhagega
-        const moveButton = () => {
-            noBtn.style.position = 'fixed';
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-        };
-
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Mobile touch issue solve
-            moveButton();
-        });
-
-        // Agar wo phir bhi click kar le
-        noBtn.addEventListener('click', () => {
+        // Logic for "No" button clicks
+        function handleNoClick() {
             noClickCount++;
+            
+            // Subtle movement on click to make it feel "premium prankish"
+            const btn = document.getElementById('noBtn');
+            btn.style.transform = `translateX(${Math.random() * 20 - 10}px)`;
+
             if(noClickCount >= 10) {
                 nextPage(3);
-            } else {
-                moveButton();
             }
-        });
+        }
 
         function resetToHome() {
             noClickCount = 0;
@@ -193,18 +191,27 @@
 
         function checkName() {
             const name = document.getElementById('partnerName').value.trim().toLowerCase();
+            const error = document.getElementById('errorMsg');
+            
             if(name === "hamza") {
-                nextPage(6);
-                setTimeout(() => {
-                    document.getElementById('loadingText').innerText = "Security Override... Heart Accessed ❤️";
-                    document.body.style.background = "radial-gradient(circle at center, #ff4d6d 0%, #590d22 100%)";
-                    setTimeout(() => {
-                        document.getElementById('page6').innerHTML = "<h1>SURPRISE! ❤️</h1><p>You thought it was a virus? No, it's just my heart trying to reach you. Happy Valentine's!</p>";
-                    }, 2000);
-                }, 2000);
+                error.style.display = 'none';
+                revealValentine();
             } else {
-                document.getElementById('errorMsg').style.display = 'block';
+                error.style.display = 'block';
             }
+        }
+
+        function revealValentine() {
+            // Branded Reveal
+            document.body.style.transition = "all 2s ease";
+            document.body.style.background = "radial-gradient(circle at center, #ff2d55 0%, #2b030b 100%)";
+            
+            const activePage = document.querySelector('.container.active');
+            activePage.innerHTML = `
+                <h1 style="color: white;">SUCCESS ❤️</h1>
+                <p>System Overridden by Love.<br><br>Happy Valentine's, my beautiful authorized user!</p>
+                <div style="font-size: 3rem;">🌹</div>
+            `;
         }
     </script>
 </body>
